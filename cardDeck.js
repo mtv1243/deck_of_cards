@@ -91,11 +91,14 @@ let player2El = document.querySelector('.player2');
 let dealButton = document.querySelector('#dealEl');
 let resetButton = document.querySelector('#resetEl');
 
-//deal a card on click dealButton
-dealButton.addEventListener('click', deal);
 
-//reset on click Reset button
-resetButton.addEventListener('click', reset);
+deckRef.on('value', (snapshot)=>{
+  //deal a card on click dealButton
+  dealButton.addEventListener('click', deal);
+
+  //reset on click Reset button
+  resetButton.addEventListener('click', reset);
+})
 
 //alternate dealing cards to each player
 function deal(){
