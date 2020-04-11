@@ -1,0 +1,21 @@
+.player1, .player2 {
+  border: 1px solid;
+  margin: 20px auto;
+  width: 50%;
+}
+
+.card {
+  display: inline-block;
+  border: 1px solid;
+  padding: 5px;
+  margin: 5px;
+}
+
+.Diamonds, .Hearts {
+  background-color: #FF6E6B;
+}
+
+.Clubs, .Spades {
+  background-color: #111;
+  color: #fff;
+}
