@@ -75,10 +75,10 @@ let values = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
 let cardDeck = new Deck();
 cardDeck.createDeck(suits, values);
 cardDeck.shuffle();
-console.log(cardDeck);
-
-//set cardDeck into Firebase
-deckRef.set(cardDeck);
+// console.log(cardDeck);
+//
+// //set cardDeck into Firebase
+// deckRef.set(cardDeck);
 
 //make player hands
 let player1Hand = [];
@@ -91,14 +91,51 @@ let player2El = document.querySelector('.player2');
 let dealButton = document.querySelector('#dealEl');
 let resetButton = document.querySelector('#resetEl');
 
+dealButton.addEventListener('click', deal);
 
-deckRef.on('value', (snapshot)=>{
-  //deal a card on click dealButton
-  dealButton.addEventListener('click', deal);
+function deal(){
+  deckRef.once('value', (snap)=>{
+    let fbDeck = snap.val();
+    let fbCard = fbDeck.pop();
+    console.log(fbCard);
+    
+    // if(turn){
+    //   player1Ref.once('value', (snap)=>{
+    //     let hand = snap.val();
+    //     // hand.push(fbCard);
+    //     player1Ref.update(hand);
+    //     console.log(hand);
+    //   })
+    // } else {
+    //   player2Ref.once('value', (snap)=>{
+    //     let hand = snap.val();
+    //     // hand.push(fbCard);
+    //     player2Ref.update(hand);
+    //     console.log(hand);
+    //   })
+    // }
+    // deckRef.set(fbDeck);
+  });
+};
+/*
+button create deck
 
-  //reset on click Reset button
-  resetButton.addEventListener('click', reset);
-})
+dealing:
+  pull snapshot of deck
+  pop that card from the deck
+  determine whose turn it is
+  add card to players hand reference
+  create HTML element with card
+  insert HTML element
+  change whose turn it is
+*/
+
+/*
+//deal a card on click dealButton
+dealButton.addEventListener('click', deal);
+
+//reset on click Reset button
+resetButton.addEventListener('click', reset);
 
 //alternate dealing cards to each player
 function deal(){
@@ -148,6 +185,7 @@ function reset(){
   player2Hand = [];
   player2Ref.set('');
 }
+*/
 
 /*
 ======= DEALING ===========
