@@ -14,10 +14,13 @@ firebase.initializeApp(firebaseConfig);
 //Firebase setup
 //=======================================
 let DeckReference = firebase.database();
-const deckRef = DeckReference.ref('deckoCards');
-const player1Ref = DeckReference.ref('player1Hand');
-const player2Ref = DeckReference.ref('player2Hand');
+let deckRef = DeckReference.ref('deckoCards');
+let player1Ref = DeckReference.ref('player1Hand');
+let player2Ref = DeckReference.ref('player2Hand');
 
+//set the player hands to empty on page load
+player1Ref.set({player1Cards:[]});
+player2Ref.set({player2Cards:[]});
 
 //create card class
 class Card {
@@ -93,12 +96,28 @@ let resetButton = document.querySelector('#resetEl');
 
 dealButton.addEventListener('click', deal);
 
+function genCardEl(cardObj) {
+  let cardEl = document.createElement('div');
+  cardEl.innerHTML =
+    `<span>${cardObj.value}</span>
+     <span>${cardObj.suit}</span>`;
+}
+
 function deal(){
   deckRef.once('value', (snap)=>{
     let fbDeck = snap.val();
     let fbCard = fbDeck.pop();
-    console.log(fbCard);
-    
+    deckRef.set(fbDeck);
+    console.log(fbCard.suit);
+
+    if(turn){
+      player1Ref.push().set(fbCard);
+      turn = false;
+    } else {
+      player2Ref.push().set(fbCard);
+      turn = true;
+    }
+
     // if(turn){
     //   player1Ref.once('value', (snap)=>{
     //     let hand = snap.val();
