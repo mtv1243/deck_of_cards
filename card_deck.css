@@ -1,4 +1,5 @@
 .player1, .player2 {
+  display: flex;
   border: 1px solid;
   margin: 20px auto;
   width: 50%;
@@ -7,9 +8,16 @@
 
 .card {
   display: inline-block;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  text-align: center;
   border: 1px solid;
+  border-radius: 10px;
   padding: 5px;
   margin: 5px;
+  height: 140px;
+  width: 100px;
 }
 
 .Diamonds, .Hearts {

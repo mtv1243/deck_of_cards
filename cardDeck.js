@@ -98,9 +98,12 @@ dealButton.addEventListener('click', deal);
 
 function genCardEl(cardObj) {
   let cardEl = document.createElement('div');
+  cardEl.classList.add('card');
+  cardEl.classList.add(cardObj.suit);
   cardEl.innerHTML =
-    `<span>${cardObj.value}</span>
-     <span>${cardObj.suit}</span>`;
+    `<span class="${cardObj.value}">${cardObj.value}</span><br>
+     <span class="${cardObj.suit}">${cardObj.suit}</span>`;
+     return cardEl;
 }
 
 function deal(){
@@ -112,9 +115,11 @@ function deal(){
 
     if(turn){
       player1Ref.push().set(fbCard);
+      player1El.appendChild(genCardEl(fbCard));
       turn = false;
     } else {
       player2Ref.push().set(fbCard);
+      player2El.appendChild(genCardEl(fbCard));
       turn = true;
     }
 
