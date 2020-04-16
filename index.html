@@ -10,15 +10,19 @@
 <body>
   <!-- The core Firebase JS SDK is always required and must be listed first -->
   <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"
+  integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
+  crossorigin="anonymous"></script>
 
   <button id="dealEl">Deal</button>
   <button id="resetEl">Reset</button>
   <h3>Player 1 hand</h3>
-  <div class="player1"></div>
+  <div class="player1 hide"></div>
+  <button class="show-hand-1">Show 1 hand</button>
   <h3>Player 2 hand</h3>
-  <div class="player2"></div>
+  <div class="player2 hide"></div>
+  <button class="show-hand-2">Show 2 hand</button>
   <script
     src="https://code.jquery.com/jquery-3.4.1.js"
     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="

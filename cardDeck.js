@@ -94,7 +94,19 @@ let player2El = document.querySelector('.player2');
 let dealButton = document.querySelector('#dealEl');
 let resetButton = document.querySelector('#resetEl');
 
+// let showButton1 = document.querySelector('.show-hand-1');
+// let showButton2 = document.querySelector('.show-hand-2');
+
+let $player1El = $('.player1');
+let $player2El = $('.player2');
+let $showButton1 = $('.show-hand-1');
+let $showButton2 = $('.show-hand-2');
+
+$showButton1.click(()=>{$player1El.toggleClass('hide')});
+$showButton2.click(()=>{$player2El.toggleClass('hide')});
+
 dealButton.addEventListener('click', deal);
+
 
 function deal(){
   deckRef.once('value', (snap)=>{
@@ -105,26 +117,15 @@ function deal(){
 
     if(turn){
       player1Ref.push().set(fbCard);
-      // player1El.appendChild(genCardEl(fbCard));
       turn = false;
     } else {
       player2Ref.push().set(fbCard);
-      // player2El.appendChild(genCardEl(fbCard));
       turn = true;
     }
   });
 };
 
-function genCardEl(cardObj) {
-  let cardEl = document.createElement('div');
-  cardEl.classList.add('card');
-  cardEl.classList.add(cardObj.suit);
-  cardEl.innerHTML =
-    `<span class="${cardObj.value}">${cardObj.value}</span><br>
-     <span class="${cardObj.suit}">${cardObj.suit}</span>`;
-  return cardEl;
-}
-
+//listen for change in value of player 1 hand
 player1Ref.on('value', (snap)=>{
   let hand = snap.val();
   //reset the players hand element
@@ -132,6 +133,7 @@ player1Ref.on('value', (snap)=>{
   getFBHand(player1El, hand);
 });
 
+//listen for change in value of player 2 hand
 player2Ref.on('value', (snap)=>{
   let hand = snap.val();
   //reset player hand element
@@ -139,6 +141,7 @@ player2Ref.on('value', (snap)=>{
   getFBHand(player2El, hand);
 })
 
+//this runs every tme there is a change in a player's hand in the database
 //for each key in hand, create HTML element and append to hand element
 function getFBHand(handEl, hand){
   for(key in hand){

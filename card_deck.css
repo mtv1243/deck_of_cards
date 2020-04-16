@@ -28,3 +28,7 @@
   background-color: #111;
   color: #fff;
 }
+
+.hide {
+  visibility: hidden;
+}
