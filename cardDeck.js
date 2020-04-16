@@ -96,6 +96,25 @@ let resetButton = document.querySelector('#resetEl');
 
 dealButton.addEventListener('click', deal);
 
+function deal(){
+  deckRef.once('value', (snap)=>{
+    let fbDeck = snap.val();
+    let fbCard = fbDeck.pop();
+    deckRef.set(fbDeck);
+    // console.log(fbCard.suit);
+
+    if(turn){
+      player1Ref.push().set(fbCard);
+      // player1El.appendChild(genCardEl(fbCard));
+      turn = false;
+    } else {
+      player2Ref.push().set(fbCard);
+      // player2El.appendChild(genCardEl(fbCard));
+      turn = true;
+    }
+  });
+};
+
 function genCardEl(cardObj) {
   let cardEl = document.createElement('div');
   cardEl.classList.add('card');
@@ -103,44 +122,38 @@ function genCardEl(cardObj) {
   cardEl.innerHTML =
     `<span class="${cardObj.value}">${cardObj.value}</span><br>
      <span class="${cardObj.suit}">${cardObj.suit}</span>`;
-     return cardEl;
+  return cardEl;
 }
 
-function deal(){
-  deckRef.once('value', (snap)=>{
-    let fbDeck = snap.val();
-    let fbCard = fbDeck.pop();
-    deckRef.set(fbDeck);
-    console.log(fbCard.suit);
+player1Ref.on('value', (snap)=>{
+  let hand = snap.val();
+  //reset the players hand element
+  player1El.innerHTML='';
+  getFBHand(player1El, hand);
+});
 
-    if(turn){
-      player1Ref.push().set(fbCard);
-      player1El.appendChild(genCardEl(fbCard));
-      turn = false;
-    } else {
-      player2Ref.push().set(fbCard);
-      player2El.appendChild(genCardEl(fbCard));
-      turn = true;
-    }
+player2Ref.on('value', (snap)=>{
+  let hand = snap.val();
+  //reset player hand element
+  player2El.innerHTML='';
+  getFBHand(player2El, hand);
+})
 
-    // if(turn){
-    //   player1Ref.once('value', (snap)=>{
-    //     let hand = snap.val();
-    //     // hand.push(fbCard);
-    //     player1Ref.update(hand);
-    //     console.log(hand);
-    //   })
-    // } else {
-    //   player2Ref.once('value', (snap)=>{
-    //     let hand = snap.val();
-    //     // hand.push(fbCard);
-    //     player2Ref.update(hand);
-    //     console.log(hand);
-    //   })
-    // }
-    // deckRef.set(fbDeck);
-  });
-};
+//for each key in hand, create HTML element and append to hand element
+function getFBHand(handEl, hand){
+  for(key in hand){
+    let suit = hand[key].suit;
+    let value = hand[key].value;
+    let cardEl = document.createElement('div');
+    cardEl.classList.add('card');
+    cardEl.classList.add(suit);
+    cardEl.innerHTML =
+      `<span class="${value}">${value}</span><br>
+       <span class="${suit}">${suit}</span>`;
+    handEl.appendChild(cardEl);
+  }
+}
+
 /*
 button create deck
 
