@@ -111,7 +111,7 @@ dealButton.addEventListener('click', deal);
 function deal(){
   deckRef.once('value', (snap)=>{
     let fbDeck = snap.val();
-    let fbCard = fbDeck.pop();
+    let fbCard = fbDeck.shift();
     deckRef.set(fbDeck);
     // console.log(fbCard.suit);
 
@@ -158,91 +158,7 @@ function getFBHand(handEl, hand){
 }
 
 /*
-button create deck
 
-dealing:
-  pull snapshot of deck
-  pop that card from the deck
-  determine whose turn it is
-  add card to players hand reference
-  create HTML element with card
-  insert HTML element
-  change whose turn it is
-*/
 
-/*
-//deal a card on click dealButton
-dealButton.addEventListener('click', deal);
 
-//reset on click Reset button
-resetButton.addEventListener('click', reset);
-
-//alternate dealing cards to each player
-function deal(){
-  if(turn){
-    generateCard(player1Hand, player1El);
-    player1Ref.set(player1Hand);
-    deckRef.set(cardDeck);
-    turn = false;
-    return player1Hand;
-  } else {
-    generateCard(player2Hand ,player2El);
-    player2Ref.set(player2Hand);
-    deckRef.set(cardDeck);
-    turn = true;
-    return player2Hand;
-  }
-}
-
-//deal a card from the deck
-function generateCard(playerHand, playerHandEl) {
-  let dealtCard = cardDeck.deal(1);
-  let dealtCardVal = dealtCard[0].value;
-  let dealtCardSuit = dealtCard[0].suit;
-
-  playerHand.push(dealtCard);
-  let cardEl = document.createElement('span');
-  cardEl.classList.add('card', dealtCardSuit);
-  cardEl.innerHTML = `${dealtCardVal} of ${dealtCardSuit}`;
-  playerHandEl.appendChild(cardEl);
-  console.log(cardEl);
-}
-
-//reset function
-function reset(){
-  cardDeck = new Deck();
-  cardDeck.createDeck(suits, values);
-  cardDeck.shuffle();
-  console.log(cardDeck);
-
-  //set cardDeck into Firebase
-  deckRef.set(cardDeck);
-
-  //reset player hands
-  player1Hand = [];
-  player1Ref.set('');
-
-  player2Hand = [];
-  player2Ref.set('');
-}
-*/
-
-/*
-======= DEALING ===========
-determine whose turn it is to get a card
-remove card from deck
-push card into the hand
-  -create variables for suit and value
-  -create an element to hold the card
-  -populate the element with suit and value
-  -appendChild the element into the DOM
-push the card into the hand
-switch turns
-
-========== PLAY =============
-player reveals hand
-chooses card to play
-card(s) enter pool
-fifteens found
-points added to scores
 */
