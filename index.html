@@ -19,22 +19,26 @@
   <button id="resetEl">Reset</button>
 
   <form action="" id="dest">
-    <input type="radio" name="deal" value="deal" id="deal" class="radio">
+    <input type="radio" name="deal" value="deal" id="deal-radio" class="radio">
     <label for="deal">Deal</label>
-    <input type="radio" name="crib" value="crib" id="crib" class="radio">
+    <input type="radio" name="crib" value="crib" id="crib-radio" class="radio">
     <label for="crib">Crib</label>
-    <input type="radio" name="pot" value="pot" id="pot" class="radio">
+    <input type="radio" name="pot" value="pot" id="pot-radio" class="radio">
     <label for="pot">Pot</label>
-    <input type="radio" name="cut" value="cut" id="cut" class="radio">
-    <label for="cut">Cut</label>
+    <input type="radio" name="starter" value="starter" id="starter-radio" class="radio">
+    <label for="cut">Starter</label>
   </form>
 
   <h3>Player 1 hand</h3>
   <div class="player1 hide"></div>
   <button class="show-hand-1">Show 1 hand</button>
+  <div class="player1crib hide"></div>
+  <button class="show-crib-1">Show 1 Crib</button>
   <h3>Player 2 hand</h3>
   <div class="player2 hide"></div>
   <button class="show-hand-2">Show 2 hand</button>
+  <div class="player2crib hide"></div>
+  <button class="show-crib-2">Show 2 hand</button>
   <script
     src="https://code.jquery.com/jquery-3.4.1.js"
     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="

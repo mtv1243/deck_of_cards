@@ -17,10 +17,16 @@ let DeckReference = firebase.database();
 let deckRef = DeckReference.ref('deckoCards');
 let player1Ref = DeckReference.ref('player1Hand');
 let player2Ref = DeckReference.ref('player2Hand');
+let countRef = DeckReference.ref('count');
+let cribRef = DeckReference.ref('crib');
+let starterRef = DeckReference.ref('starter');
 
 //set the player hands to empty on page load
 player1Ref.set({player1Cards:[]});
 player2Ref.set({player2Cards:[]});
+countRef.set({count:[]});
+cribRef.set({crib:[]});
+starterRef.set({starter:[]})
 
 //create card class
 class Card {
@@ -151,8 +157,8 @@ function getFBHand(handEl, hand){
     cardEl.classList.add('card');
     cardEl.classList.add(suit);
     cardEl.innerHTML =
-      `<span class="${value}">${value}</span><br>
-       <span class="${suit}">${suit}</span>`;
+      `<span class="${value} value">${value}</span><br>
+       <!-- <span>${suit}</span>-->`;
     handEl.appendChild(cardEl);
   }
 }

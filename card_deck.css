@@ -20,13 +20,31 @@
   width: 65px;
 }
 
-.Diamonds, .Hearts {
-  background-color: #FF6E6B;
+.value {
+  font-size: 2em;
 }
 
-.Clubs, .Spades {
-  background-color: #111;
-  color: #fff;
+.Diamonds, .Hearts, .Clubs, .Spades {
+  /* background-color: #FF6E6B; */
+  background-repeat: no-repeat;
+  background-size: 50px;
+  background-position: center bottom;
+}
+
+.Clubs {
+  background-image: url('suits_imgs/Clubs.png');
+}
+
+.Spades {
+  background-image: url('suits_imgs/Spade.png');
+}
+
+.Diamonds {
+  background-image: url('suits_imgs/Diamond.png');
+}
+
+.Hearts {
+  background-image: url('suits_imgs/Heart.png');
 }
 
 .hide {
