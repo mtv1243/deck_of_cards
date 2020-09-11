@@ -15,34 +15,111 @@
   integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
   crossorigin="anonymous"></script>
 
-  <button id="dealEl">Deal</button>
-  <button id="resetEl">Reset</button>
+  <div id="scoreboard">
+    <section class="score1">
+      <label for="score1-counter">Player 1:</label>
+      <input type="number" id="score1-counter" value="0">
+    </section>
+    <section class="score2">
+      <label for="score2-counter">Player 2:</label>
+      <input type="number" id="score2-counter" value="0">
+    </section>
+  </div>
 
-  <form action="" id="dest">
-    <input type="radio" name="deal" value="deal" id="deal-radio" class="radio">
-    <label for="deal">Deal</label>
-    <input type="radio" name="crib" value="crib" id="crib-radio" class="radio">
-    <label for="crib">Crib</label>
-    <input type="radio" name="pot" value="pot" id="pot-radio" class="radio">
-    <label for="pot">Pot</label>
-    <input type="radio" name="starter" value="starter" id="starter-radio" class="radio">
-    <label for="cut">Starter</label>
-  </form>
+  <section id="controls-wrapper">
+    <button id="dealEl">Deal</button>
 
-  <h3>Player 1 hand</h3>
-  <div class="player1 hide"></div>
-  <button class="show-hand-1">Show 1 hand</button>
-  <div class="player1crib hide"></div>
-  <button class="show-crib-1">Show 1 Crib</button>
-  <h3>Player 2 hand</h3>
-  <div class="player2 hide"></div>
-  <button class="show-hand-2">Show 2 hand</button>
-  <div class="player2crib hide"></div>
-  <button class="show-crib-2">Show 2 hand</button>
+    <form action="" id="dest">
+      <input type="radio" name="master-controls" value="deal" id="deal-radio" class="radio" checked>
+      <label for="deal">Deal</label>
+
+      <input type="radio" name="master-controls" value="starter" id="starter-radio" class="radio">
+      <label for="cut">Starter</label>
+    </form>
+
+    <button id="resetEl">Reset</button>
+
+  </section>
+
+  <main>
+    <!-- Player 1 wrapper -->
+    <section id="player1-wrapper">
+      
+      <!-- PLAYER 1 HAND -->
+      <h3>Player 1 hand</h3>
+
+      <!-- Hand wrapper -->
+      <div class="hand-wrapper">
+        <div class="player1-controls">
+          <!-- Buttons -->
+        <button class="play-hand-1">PLAY</button><br>
+        <button class="show-hand-1">Show/Hide 1 hand</button><br>
+        <button class="show-crib-1">Show/Hide 1 Crib</button>
+        <!-- FORM -->
+        <form action="" id="player1-dest">
+  
+          <input type="radio" name="radiogroup1" value="crib" id="crib-radio" class="radio" checked>
+          <label for="crib">Crib</label>
+          
+          <input type="radio" name="radiogroup1" value="pot" id="pot-radio" class="radio">
+          <label for="pot">Pot</label>
+        </form>
+        </div>
+
+        <div class="player1 hide"></div>
+        <div class="crib1 crib hide"></div>
+      </div>
+
+    </section>
+
+    <hr>
+    <div class="play-container">
+      <div class="starter"></div>
+
+      <div class="pots-wrapper">
+        <div class="player1-pot"></div>
+        <div class="player2-pot"></div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Player 2 wrapper -->
+    <section id="player2-wrapper">
+      <!-- PLAYER 2 HAND -->
+      <h3>Player 2 hand</h3>
+
+      <!-- Hand wrapper -->
+      <div class="hand-wrapper">
+        <div class="player-controls">
+
+          <!-- buttons -->
+          <button class="play-hand-2">PLAY</button><br>
+          <button class="show-hand-2">Show/Hide 2 hand</button><br>
+          <button class="show-crib-2">Show/Hide 2 crib</button>
+    
+          <!-- FORM -->
+          <form action="" id="player1-dest">
+            <input type="radio" name="radio-group" value="crib" id="crib-radio" class="radio" checked>
+            <label for="crib">Crib</label>
+            
+            <input type="radio" name="radio-group" value="pot" id="pot-radio" class="radio">
+            <label for="pot">Pot</label>
+          </form>
+          </div>
+        <div class="player2 hide"></div>
+        <div class="crib2 crib hide"></div>
+      </div>
+
+    </section>
+  </main>
+  
+  <!-- JQUERY DEPENDENCCY -->
   <script
     src="https://code.jquery.com/jquery-3.4.1.js"
     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script>
+  <!-- APP JAVASCRIPT -->
   <script src='./cardDeck.js'></script>
 </body>
 </html>

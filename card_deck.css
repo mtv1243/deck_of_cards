@@ -1,34 +1,100 @@
-.player1, .player2 {
+*{
+  box-sizing: border-box;
+}
+
+#scoreboard {
+  position: fixed;
+  right: 2rem;
+  top: 2rem;
+  border: 1px solid #000;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.score1 {
+  margin-right: 20px;
+}
+
+.score1, .score2 {
+  display: inline-block;
+}
+
+#score1-counter, #score2-counter {
+  width: 3.5rem;
+}
+
+#controls-wrapper {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.hand-wrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+/* PLAY CONTAINER */
+
+.play-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pots-wrapper {
+  flex-basis: 80%;
+}
+
+.starter {
+  flex-basis: 20%;
+}
+
+
+.player1, .player2, .crib, .player1-pot, .player2-pot, .starter {
   display: flex;
   border: 1px solid;
-  margin: 20px auto;
+  padding: 5px;
+  margin: 5px auto;
   width: 50%;
+  height: 90px;
   min-height: 20px;
 }
 
+.crib {
+  width: 200px;
+}
+
 .card {
+  cursor: pointer;
   display: inline-block;
   /* display: flex;
   align-items: center;
   justify-content: center; */
   text-align: center;
   border: 1px solid;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 5px;
   margin: 5px;
-  height: 91px;
-  width: 65px;
+  height: 70px;
+  width: 51px;
+  box-shadow: 0 0 5px rgba(0,0,0,0);
+}
+
+.card:hover {
+  box-shadow: 0 0 5px rgba(0,0,0,.4);
 }
 
 .value {
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 .Diamonds, .Hearts, .Clubs, .Spades {
   /* background-color: #FF6E6B; */
   background-repeat: no-repeat;
-  background-size: 50px;
-  background-position: center bottom;
+  background-size: 25px;
+  background-position: center 35px;
 }
 
 .Clubs {
