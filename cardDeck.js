@@ -22,6 +22,7 @@ let count2Ref = DeckReference.ref('count2');
 let crib1Ref = DeckReference.ref('crib1');
 let crib2Ref = DeckReference.ref('crib2');
 let starterRef = DeckReference.ref('starter');
+let scoreboardRef = DeckReference.ref('scoreboard')
 
 //set the player hands to empty on page load
 player1Ref.set({player1Cards:[]});
@@ -31,6 +32,7 @@ count2Ref.set({count:[]});
 crib1Ref.set({crib:[]});
 crib2Ref.set({crib:[]});
 starterRef.set({starter:[]})
+scoreboardRef.set({score1: 0, score2: 0});
 
 //========================================
 //create card class and deck
@@ -295,6 +297,11 @@ player1El.addEventListener('click', (e)=>{
         } else if(val === 'pot') {
           count1Ref.push().set(hand[key]);
         }
+        
+        // update the firebase player hand
+        delete hand[key];
+        player1Ref.set(hand);
+
       } else {
         console.log('wrong card');
       } 
@@ -347,7 +354,10 @@ player2El.addEventListener('click', (e)=>{
 
 
 /*
-
-
+hands DOM not updating when remote opponent plays into crib
+pot DOM only updating for one player
+score needs to update for both players
+play button can be removed
+disable radio buttons after play 2 to crib
 
 */
