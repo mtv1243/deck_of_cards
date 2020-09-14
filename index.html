@@ -30,7 +30,7 @@
 
 
   <main>
-      <!-- CONTROLS -->
+      <!-- DEAL STARTER CONTROLS -->
   <section id="controls-wrapper">
     <button id="dealEl">Deal</button>
 
@@ -40,6 +40,16 @@
 
       <input type="radio" name="master-controls" value="starter" id="starter-radio" class="radio">
       <label for="cut">Starter</label>
+    </form>
+
+    <!-- CRIB POT FORM -->
+    <form action="" id="cribPotForm">
+  
+      <input type="radio" name="cribPotRadio" value="crib" id="crib-radio" class="radio" checked>
+      <label for="crib">Crib</label>
+      
+      <input type="radio" name="cribPotRadio" value="pot" id="pot-radio" class="radio">
+      <label for="pot">Pot</label>
     </form>
 
     <button id="resetEl">Reset</button>
@@ -58,14 +68,14 @@
         <button class="show-hand-1">Show/Hide 1 hand</button><br>
         <button class="show-crib-1">Show/Hide 1 Crib</button>
         <!-- FORM -->
-        <form action="" id="player1-dest">
+        <!-- <form action="" id="player1-dest">
   
           <input type="radio" name="radiogroup1" value="crib" id="crib-radio" class="radio" checked>
           <label for="crib">Crib</label>
           
           <input type="radio" name="radiogroup1" value="pot" id="pot-radio" class="radio">
           <label for="pot">Pot</label>
-        </form>
+        </form> -->
         </div>
 
         <div class="player1 hide"></div>
@@ -82,6 +92,7 @@
         <div class="player1-pot"></div>
         <div class="player2-pot"></div>
       </div>
+      <div class="count">0</div>
     </div>
 
     <hr>
@@ -100,13 +111,13 @@
           <button class="show-crib-2">Show/Hide 2 crib</button>
     
           <!-- FORM -->
-          <form action="" id="player1-dest">
+          <!-- <form action="" id="player1-dest">
             <input type="radio" name="radio-group" value="crib" id="crib-radio" class="radio" checked>
             <label for="crib">Crib</label>
             
             <input type="radio" name="radio-group" value="pot" id="pot-radio" class="radio">
             <label for="pot">Pot</label>
-          </form>
+          </form> -->
           </div>
         <div class="player2 hide"></div>
         <div class="crib2 crib hide"></div>

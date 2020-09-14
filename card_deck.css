@@ -18,6 +18,10 @@ main {
   padding: 20px;
 }
 
+form {
+  border: 1px solid #000;
+}
+
 #resetEl {
   margin-left: 20px;
 }

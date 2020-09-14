@@ -22,7 +22,9 @@ let count2Ref = DeckReference.ref('count2');
 let crib1Ref = DeckReference.ref('crib1');
 let crib2Ref = DeckReference.ref('crib2');
 let starterRef = DeckReference.ref('starter');
-let scoreboardRef = DeckReference.ref('scoreboard')
+let scoreboardRef = DeckReference.ref('scoreboard');
+let cribPotRadioRef = DeckReference.ref('cribPot'); 
+let counterRef = DeckReference.ref('counter');
 
 //set the player hands to empty on page load
 player1Ref.set({player1Cards:[]});
@@ -33,6 +35,8 @@ crib1Ref.set({crib:[]});
 crib2Ref.set({crib:[]});
 starterRef.set({starter:[]})
 scoreboardRef.set({score1: 0, score2: 0});
+cribPotRadioRef.set({value: 'crib'});
+counterRef.set(0);
 
 //========================================
 //create card class and deck
@@ -124,6 +128,9 @@ let player2ScoreEl = document.querySelector('#score2-counter');
 let dealButton = document.querySelector('#dealEl');
 let resetButton = document.querySelector('#resetEl');
 
+// get count element
+let countEl = document.querySelector('.count');
+
 let $showButton1 = $('.show-hand-1');
 let $showButton2 = $('.show-hand-2');
 let $cribButton1 = $('.show-crib-1');
@@ -163,6 +170,28 @@ scoreboardRef.on('value', (snap) => {
   player1ScoreEl.value = snap.val().score1;
   player2ScoreEl.value = snap.val().score2;
 })
+
+// ========================
+// Crib pot radio reference updater
+// ========================
+document.querySelector('#cribPotForm').addEventListener('click', (e) => {
+  // e.preventDefault();
+  let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
+  cribPotRadioRef.set({value: val});
+});
+
+cribPotRadioRef.on('value', (snap) => {
+  let val = snap.val();
+
+  // change the corresponding radio when one  is clicked
+  if(val.value === 'crib') {
+    document.querySelector('#crib-radio').checked = true;
+  } else if(val.value === 'pot') {
+    document.querySelector('#pot-radio').checked = true;
+  }
+})
+
+// #crib-radio
 
 //===================================
 // Reset all values except scoreboard
@@ -256,7 +285,7 @@ crib2Ref.on('value', (snap)=>{
 
 count1Ref.on('value', (snap)=>{
   let hand = snap.val();
-  let val = document.querySelector('input[name="radiogroup1"]:checked').value;
+  let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
 
   if(val === 'pot') {
     player1PotEl.innerHTML = '';
@@ -269,7 +298,7 @@ count1Ref.on('value', (snap)=>{
 
 count2Ref.on('value', (snap)=>{
   let hand = snap.val();
-  let val = document.querySelector('input[name="radio-group"]:checked').value;
+  let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
 
   if(val === 'pot') {
     player2PotEl.innerHTML = '';
@@ -278,6 +307,11 @@ count2Ref.on('value', (snap)=>{
     player2CribEl.innerHTML = '';
     getFBHand(player2CribEl, hand)
   }
+})
+
+counterRef.on('value', (snap) => {
+  let count = snap.val();
+  countEl.innerHTML = count;
 })
 
 //this runs every time there is a change in a player's hand in the database
@@ -305,7 +339,10 @@ player1El.addEventListener('click', (e)=>{
   //get the suit and card value for the card that was clicked
   let suit = card.classList[1];
   let value = card.querySelector('span').innerHTML;
-  console.log(suit, value);
+  // console.log(suit, value);
+
+  // update the count on both screens
+  updateCount(value);
 
   card.remove()
   //get a snapshot of the player's hand search it for the
@@ -320,7 +357,7 @@ player1El.addEventListener('click', (e)=>{
       let fbValue = hand[key]['value'];
 
       // see if card should go to crib or pot
-      let val = document.querySelector('input[name="radiogroup1"]:checked').value;
+      let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
 
       //check if the fb card matches the card clicked
       if (fbSuit === suit && fbValue.toString() === value) {
@@ -354,7 +391,9 @@ player2El.addEventListener('click', (e)=>{
   //get the suit and card value for the card that was clicked
   let suit = card.classList[1];
   let value = card.querySelector('span').innerHTML;
-  console.log(suit, value);
+  // console.log(typeof value);
+
+  updateCount(value);
 
   card.remove()
   //get a snapshot of the player's hand search it for the
@@ -369,7 +408,7 @@ player2El.addEventListener('click', (e)=>{
       let fbSuit = hand[key]['suit'];
       let fbValue = hand[key]['value'];
       // see if card should go to crib or pot
-      let val = document.querySelector('input[name="radio-group"]:checked').value;
+      let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
 
       //check if the fb card matches the card clicked
       if (fbSuit === suit && fbValue.toString() === value) {
@@ -392,12 +431,36 @@ player2El.addEventListener('click', (e)=>{
 })
 
 
+function updateCount(cardVal) {
+  let currentCount = parseInt(countEl.innerHTML);
+  let parsedVal = 0;
+  console.log('current count: ' + currentCount);
+  if (document.querySelector('input[name="cribPotRadio"]:checked').value === 'pot') {
+    if(cardVal == 'J' || cardVal == 'Q' || cardVal == 'K') {
+      parsedVal += 10;
+      currentCount += 10;
+    } else if (cardVal == 'A') {
+      parsedVal += 1;
+      currentCount += 1;
+    } else {
+      parsedVal += parseInt(cardVal);
+      currentCount += parseInt(cardVal);
+    }
+  }
+
+  (currentCount > 31) ? counterRef.set(parsedVal) : counterRef.set(currentCount);
+}
+
 
 /*
-hands DOM not updating when remote opponent plays into crib
-pot DOM only updating for one player
-score needs to update for both players
-play button can be removed
-disable radio buttons after play 2 to crib
+player 2 playing into their crib does not show up for player 1 in DOM
+they leave the hand but do not show up in DOM
+
+when opponent plays card into either crib or pot, whatever radio button is checked locally determines where it goes, not what radio button opponent has checked
+
+FIX = 
+remove players individual radio buttons and replace with one set connected to firebase that will control where cards go globally
+
+tumbleweed
 
 */
