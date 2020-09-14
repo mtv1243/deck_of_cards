@@ -2,6 +2,30 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: #4f4f4f;
+}
+
+main {
+  width: 70%;
+  margin: 0 auto;
+  padding: 0 20px;
+  background-color: #fff;
+}
+
+/* controls */
+#controls-wrapper {
+  padding: 20px;
+}
+
+#resetEl {
+  margin-left: 20px;
+}
+
+#dealEl {
+  margin-right: 20px;
+}
+
 #scoreboard {
   position: fixed;
   right: 2rem;

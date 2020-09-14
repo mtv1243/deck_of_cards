@@ -116,8 +116,9 @@ let starterEl = document.querySelector('.starter');
 let player1PotEl = document.querySelector('.player1-pot');
 let player2PotEl = document.querySelector('.player2-pot');
 
-// let showButton1 = document.querySelector('.show-hand-1');
-// let showButton2 = document.querySelector('.show-hand-2');
+// Score Elements
+let player1ScoreEl = document.querySelector('#score1-counter');
+let player2ScoreEl = document.querySelector('#score2-counter');
 
 //get button elements
 let dealButton = document.querySelector('#dealEl');
@@ -133,7 +134,40 @@ $showButton2.click(()=>{$player2El.toggleClass('hide')});
 $cribButton1.click(()=>{$player1Crib.toggleClass('hide')});
 $cribButton2.click(()=>{$player2Crib.toggleClass('hide')});
 
+// update firebase score reference when click scorboard element
+player1ScoreEl.addEventListener('click', (e) => {
 
+  scoreboardRef.once('value', (snap) => {
+    let fbScore = snap.val();
+    // console.log(fbScore);
+    let score = player1ScoreEl.value;
+    fbScore.score1 = score;
+    scoreboardRef.set(fbScore);
+    score = fbScore.score1;
+  })
+})
+
+player2ScoreEl.addEventListener('click', (e) => {
+
+  scoreboardRef.once('value', (snap) => {
+    let fbScore = snap.val();
+    // console.log(fbScore);
+    let score = player2ScoreEl.value;
+    fbScore.score2 = score;
+    scoreboardRef.set(fbScore);
+    score = fbScore.score2;
+  })
+})
+
+scoreboardRef.on('value', (snap) => {
+  player1ScoreEl.value = snap.val().score1;
+  player2ScoreEl.value = snap.val().score2;
+})
+
+//===================================
+// Reset all values except scoreboard
+// on reset button click
+//===================================
 resetButton.addEventListener('click', (e) => {
   e.preventDefault();
 
@@ -266,6 +300,7 @@ function getFBHand(handEl, hand){
 player1El.addEventListener('click', (e)=>{
   //get nearest card element to the target
   let card = e.target.closest('div.card');
+  let newHand = {};
   // console.log(card);
   //get the suit and card value for the card that was clicked
   let suit = card.classList[1];
@@ -277,13 +312,13 @@ player1El.addEventListener('click', (e)=>{
   //corresponding card that was clicked
   player1Ref.once('value', (snap)=>{
     let hand = snap.val();
-    
     // console.log(hand);
     //iterate through the cards in the hand and find the one that was clicked
     for (key in hand) {
       // grab the suit and value of the key being checked
       let fbSuit = hand[key]['suit'];
       let fbValue = hand[key]['value'];
+
       // see if card should go to crib or pot
       let val = document.querySelector('input[name="radiogroup1"]:checked').value;
 
@@ -297,22 +332,24 @@ player1El.addEventListener('click', (e)=>{
         } else if(val === 'pot') {
           count1Ref.push().set(hand[key]);
         }
-        
-        // update the firebase player hand
-        delete hand[key];
-        player1Ref.set(hand);
 
       } else {
-        console.log('wrong card');
-      } 
+        // console.log('wrong card');
+        newHand[key] = hand[key];
+      }
     }
+    
   })
+  // set the new firebase hand
+  player1Ref.set(newHand);
+  // console.log(newHand);
 })
 
 // Same for player 2 element
 player2El.addEventListener('click', (e)=>{
   //get nearest card element to the target
   let card = e.target.closest('div.card');
+  let newHand = {};
   // console.log(card);
   //get the suit and card value for the card that was clicked
   let suit = card.classList[1];
@@ -345,10 +382,13 @@ player2El.addEventListener('click', (e)=>{
           count2Ref.push().set(hand[key]);
         }
       } else {
-        console.log('wrong card');
+        // console.log('wrong card');
+        newHand[key] = hand[key];
       } 
     }
   })
+  // set the new firebase hand
+  player2Ref.set(newHand);
 })
 
 
