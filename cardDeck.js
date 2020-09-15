@@ -207,7 +207,8 @@ resetButton.addEventListener('click', (e) => {
   count2Ref.set({count:[]});
   crib1Ref.set({crib:[]});
   crib2Ref.set({crib:[]});
-  starterRef.set({starter:[]})
+  starterRef.set({starter:[]});
+  counterRef.set(0);
 
   // create a new deck and shuffle it
   cardDeck = new Deck();
