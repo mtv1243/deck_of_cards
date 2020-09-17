@@ -219,6 +219,11 @@ resetButton.addEventListener('click', (e) => {
   player1Hand = [];
   player2Hand = [];
   turn = true;
+
+  //reset the pot elements on click (in case there's a glitch)
+  player1PotEl.innerHTML = '';
+  player2PotEl.innerHTML = '';
+
 })
 
 //call deal function when click on deal button
