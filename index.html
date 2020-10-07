@@ -15,17 +15,7 @@
   integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
   crossorigin="anonymous"></script>
 
-  <!-- SCOREBOARD -->
-  <div id="scoreboard">
-    <section class="score1">
-      <label for="score1-counter">Player 1:</label>
-      <input type="number" id="score1-counter" value="0">
-    </section>
-    <section class="score2">
-      <label for="score2-counter">Player 2:</label>
-      <input type="number" id="score2-counter" value="0">
-    </section>
-  </div>
+  
 
 
 
@@ -35,52 +25,70 @@
     <button id="dealEl">Deal</button>
 
     <form action="" id="dest">
-      <input type="radio" name="master-controls" value="deal" id="deal-radio" class="radio" checked>
+      <div class="radio-wrapper">
+        <input type="radio" name="master-controls" value="deal" id="deal-radio" class="radio" checked>
       <label for="deal">Deal</label>
-
-      <input type="radio" name="master-controls" value="starter" id="starter-radio" class="radio">
-      <label for="cut">Starter</label>
+      </div>
+      
+      <div class="radio-wrapper">
+        <input type="radio" name="master-controls" value="starter" id="starter-radio" class="radio">
+        <label for="cut">Starter</label>
+      </div>
+      
     </form>
 
     <!-- CRIB POT FORM -->
     <form action="" id="cribPotForm">
-  
-      <input type="radio" name="cribPotRadio" value="crib" id="crib-radio" class="radio" checked>
-      <label for="crib">Crib</label>
       
-      <input type="radio" name="cribPotRadio" value="pot" id="pot-radio" class="radio">
+      <div class="radio-wrapper">
+        <input type="radio" name="cribPotRadio" value="crib" id="crib-radio" class="radio" checked>
+      <label for="crib">Crib</label>
+      </div>
+      
+      <div class="radio-wraper">
+        <input type="radio" name="cribPotRadio" value="pot" id="pot-radio" class="radio">
       <label for="pot">Pot</label>
+      </div>
+      
     </form>
 
     <button id="resetEl">Reset</button>
 
+      <!-- SCOREBOARD -->
+    <div id="scoreboard">
+      <section class="score1">
+        <label for="score1-counter">Player 1:</label>
+        <input type="number" id="score1-counter" value="0">
+      </section>
+      <section class="score2">
+        <label for="score2-counter">Player 2:</label>
+        <input type="number" id="score2-counter" value="0">
+      </section>
+    </div>
   </section>
     <!-- Player 1 wrapper -->
     <section id="player1-wrapper">
       
       <!-- PLAYER 1 HAND -->
+      <div class="player-controls">
+        <button class="show-hand-1">Show/Hide Hand</button>
       <h3>Player 1 hand</h3>
+        <button class="show-crib-1">Show/Hide Crib</button>
+      </div>
 
       <!-- Hand wrapper -->
       <div class="hand-wrapper">
-        <div class="player1-controls">
-          <!-- Buttons -->
-        <button class="show-hand-1">Show/Hide Hand</button><br>
-        <button class="show-crib-1">Show/Hide Crib</button>
-        <!-- FORM -->
-        <!-- <form action="" id="player1-dest">
-  
-          <input type="radio" name="radiogroup1" value="crib" id="crib-radio" class="radio" checked>
-          <label for="crib">Crib</label>
-          
-          <input type="radio" name="radiogroup1" value="pot" id="pot-radio" class="radio">
-          <label for="pot">Pot</label>
-        </form> -->
-        </div>
+        
         <div class="player1-wrapper">
+          <div class="hand1-curtain">
+            <span>HIDDEN</span>
+          </div>
           <div class="player1 hide"></div>
         </div>
         <div class="crib1-wrapper">
+          <div class="crib1-curtain">
+            <span>HIDDEN</span>
+          </div>
           <div class="crib1 crib hide"></div>
         </div>
       </div>
@@ -107,29 +115,28 @@
     <!-- Player 2 wrapper -->
     <section id="player2-wrapper">
       <!-- PLAYER 2 HAND -->
+
+      <div class="player-controls">
+
+        <!-- buttons -->
+        <button class="show-hand-2">Show/Hide Hand</button>
       <h3>Player 2 hand</h3>
+        <button class="show-crib-2">Show/Hide Crib</button>        
+        </div>
 
       <!-- Hand wrapper -->
       <div class="hand-wrapper">
-        <div class="player-controls">
-
-          <!-- buttons -->
-          <button class="show-hand-2">Show/Hide Hand</button><br>
-          <button class="show-crib-2">Show/Hide Crib</button>
-    
-          <!-- FORM -->
-          <!-- <form action="" id="player1-dest">
-            <input type="radio" name="radio-group" value="crib" id="crib-radio" class="radio" checked>
-            <label for="crib">Crib</label>
-            
-            <input type="radio" name="radio-group" value="pot" id="pot-radio" class="radio">
-            <label for="pot">Pot</label>
-          </form> -->
-          </div>
+        
           <div class="player2-wrapper">
+            <div class="hand2-curtain">
+              <span>HIDDEN</span>
+            </div>
             <div class="player2 hide"></div>
           </div>
           <div class="crib2-wrapper">
+            <div class="crib2-curtain">
+              <span>HIDDEN</span>
+            </div>
             <div class="crib2 crib hide"></div>
           </div>
       </div>

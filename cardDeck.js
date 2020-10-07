@@ -136,13 +136,28 @@ let $showButton2 = $('.show-hand-2');
 let $cribButton1 = $('.show-crib-1');
 let $cribButton2 = $('.show-crib-2');
 
-$showButton1.click(()=>{$player1El.toggleClass('hide')});
-$showButton2.click(()=>{$player2El.toggleClass('hide')});
-$cribButton1.click(()=>{$player1Crib.toggleClass('hide')});
-$cribButton2.click(()=>{$player2Crib.toggleClass('hide')});
+$showButton1.click(()=>{
+  $player1El.toggleClass('hide');
+  $('.hand1-curtain').slideToggle();
+});
+
+$showButton2.click(()=>{
+  $player2El.toggleClass('hide');
+  $('.hand2-curtain').slideToggle();
+});
+
+$cribButton1.click(()=>{
+  $player1Crib.toggleClass('hide');
+  $('.crib1-curtain').slideToggle();
+});
+
+$cribButton2.click(()=>{
+  $player2Crib.toggleClass('hide')
+  $('.crib2-curtain').slideToggle();
+});
 
 // update firebase score reference when click scorboard element
-player1ScoreEl.addEventListener('click', (e) => {
+player1ScoreEl.addEventListener('input', (e) => {
 
   scoreboardRef.once('value', (snap) => {
     let fbScore = snap.val();
@@ -154,7 +169,7 @@ player1ScoreEl.addEventListener('click', (e) => {
   })
 })
 
-player2ScoreEl.addEventListener('click', (e) => {
+player2ScoreEl.addEventListener('input', (e) => {
 
   scoreboardRef.once('value', (snap) => {
     let fbScore = snap.val();
