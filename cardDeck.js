@@ -472,6 +472,14 @@ function updateCount(cardVal) {
   (currentCount > 31) ? counterRef.set(parsedVal) : counterRef.set(currentCount);
 }
 
+// tell user the game works better in landscape mode
+function detectLandscape() {
+  if (window.innerWidth < window.innerHeight) {
+    alert('This game works best in landscape mode!');
+  }
+}
+
+detectLandscape();
 
 /*
 player 2 playing into their crib does not show up for player 1 in DOM
