@@ -137,22 +137,22 @@ let $cribButton1 = $('.show-crib-1');
 let $cribButton2 = $('.show-crib-2');
 
 $showButton1.click(()=>{
-  $player1El.toggleClass('hide');
+  // $player1El.toggleClass('hide');
   $('.hand1-curtain').slideToggle();
 });
 
 $showButton2.click(()=>{
-  $player2El.toggleClass('hide');
+  // $player2El.toggleClass('hide');
   $('.hand2-curtain').slideToggle();
 });
 
 $cribButton1.click(()=>{
-  $player1Crib.toggleClass('hide');
+  // $player1Crib.toggleClass('hide');
   $('.crib1-curtain').slideToggle();
 });
 
 $cribButton2.click(()=>{
-  $player2Crib.toggleClass('hide')
+  // $player2Crib.toggleClass('hide')
   $('.crib2-curtain').slideToggle();
 });
 
@@ -475,7 +475,7 @@ function updateCount(cardVal) {
 // tell user the game works better in landscape mode
 function detectLandscape() {
   if (window.innerWidth < window.innerHeight) {
-    alert('This game works best in landscape mode!');
+    alert('This game works best with your phone in landscape mode!');
   }
 }
 
