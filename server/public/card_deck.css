@@ -24,6 +24,27 @@ h3 {
   margin-top: 0;
 }
 
+/* INTRO
+====================== */
+.modal-wrapper {
+  width: 69%;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2A395E;
+  padding: 20px;
+}
+
+.form-wrapper {
+  margin-bottom: 2rem;
+}
+
+#gameKey-button {
+  width: 5rem;
+}
+
 /* SCORES
 ======================*/
 #scoreboard {

@@ -13,18 +13,21 @@ firebase.initializeApp(firebaseConfig);
 //=======================================
 //Firebase setup
 //=======================================
-let DeckReference = firebase.database();
-let deckRef = DeckReference.ref('deckoCards');
-let player1Ref = DeckReference.ref('player1Hand');
-let player2Ref = DeckReference.ref('player2Hand');
-let count1Ref = DeckReference.ref('count1');
-let count2Ref = DeckReference.ref('count2');
-let crib1Ref = DeckReference.ref('crib1');
-let crib2Ref = DeckReference.ref('crib2');
-let starterRef = DeckReference.ref('starter');
-let scoreboardRef = DeckReference.ref('scoreboard');
-let cribPotRadioRef = DeckReference.ref('cribPot'); 
-let counterRef = DeckReference.ref('counter');
+let gameListRef = firebase.database().ref(`gameList_${gameKey}`);
+gameListRef.push()
+
+let DeckReference = firebase.database().ref(`gameKey_${gameKey}`);
+let deckRef = DeckReference.child('deckoCards');
+let player1Ref = DeckReference.child('player1Hand');
+let player2Ref = DeckReference.child('player2Hand');
+let count1Ref = DeckReference.child('count1');
+let count2Ref = DeckReference.child('count2');
+let crib1Ref = DeckReference.child('crib1');
+let crib2Ref = DeckReference.child('crib2');
+let starterRef = DeckReference.child('starter');
+let scoreboardRef = DeckReference.child('scoreboard');
+let cribPotRadioRef = DeckReference.child('cribPot'); 
+let counterRef = DeckReference.child('counter');
 
 //set the player hands to empty on page load
 player1Ref.set({player1Cards:[]});

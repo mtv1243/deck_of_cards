@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="./card_deck.css">
+  <link rel="stylesheet" href="../public/card_deck.css" type="text/css">
   <title>Deck of Cards</title>
 </head>
 <body>
@@ -56,6 +56,7 @@
 
       <!-- SCOREBOARD -->
     <div id="scoreboard">
+      <div class="gameKey">Game Key: <span><%= gameNum %></span></div>
       <section class="score1">
         <label for="score1-counter">Player 1:</label>
         <input type="number" id="score1-counter" value="0">
@@ -157,7 +158,12 @@
     src="https://code.jquery.com/jquery-3.4.1.js"
     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script>
+  <!-- EJS VARIABLES -->
+    <script>
+      let gameKey = <%= gameNum %>;
+    </script>
+
   <!-- APP JAVASCRIPT -->
-  <script src='./cardDeck.js'></script>
+  <script src='../public/cardDeck.js'></script>
 </body>
 </html>
