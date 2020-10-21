@@ -1,10 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 const fsPromises = require('fs').promises;
-
-// const indexContents = require('./indexString.js');
 
 let gameKey;
 
@@ -58,7 +56,6 @@ app.post('/game', (req, res, next) => {
 // listen for get at the url generated in the previous middleware
 
 app.post('/find-game', (req, res, next) => {
-    console.log(req.url, req.body);
     res.redirect(`/game/${req.body.gameKey}`);
 })
 
