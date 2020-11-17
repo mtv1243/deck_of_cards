@@ -1,11 +1,49 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-// const fs = require('fs');
+const fs = require('fs');
 const fsPromises = require('fs').promises;
 
 let gameKey;
 
+// used to create unique game keys
+const chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+// holds the unique game keys, in order of creation
+// let gamesArr = [];
+
+// get path of directory holding game files
+const gameFilesPath = path.join(__dirname, '/views/gameFiles');
+setInterval(()=> {
+    // check if any game files are more than 24 hours old, if yes, delete those files
+    fs.readdir(gameFilesPath, (err, files) => {
+        if (err) {
+            return console.log('Unable to scan directory' + err);
+        }
+        // check age of each file in the directory. if > 24hrs, delete it
+        files.forEach((file) => {
+            if(file.includes('gitignore')) {
+                console.log('ignore the gitignore!');
+            } else {
+                let today = new Date();
+                let birthTime = fs.statSync(gameFilesPath + '/' + file).birthtime;
+                // console.log(birthTime.getTime());
+                let timeDiff = today.getTime() - birthTime;
+                // console.log(timeDiff);
+                if(timeDiff > 86400000){
+                    console.log('deleted game file' + file);
+                    fs.unlink(gameFilesPath + '/' + file, (err) => {
+                        if (err) {console.log(err);}
+                    });
+                } else {
+                    console.log(file + ' is < 24hrs old')
+                }
+            }
+        })
+    })
+}, 86400000)
+
+// Routing
 
 const app = express();
 
@@ -17,76 +55,67 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use('/public', express.static("public"));
 
 app.get('/', (req, res, next) => {
+    // console.log('get /');
     res.render('intro');
 })
 
 // create a new game key
 app.post('/game', (req, res, next) => {
-    gameKey = Math.round(Math.random() * 100);
+    // console.log('post /game');
+
 
     // use node FS promises to complete the file creation before redirect
     fsPromises.readFile('./views/index.ejs')
         .then((buffer) => {
+            //  generate new gamekey
+            gameKey = `${chars[Math.round(Math.random() * 35)]}${chars[Math.round(Math.random() * 35)]}${chars[Math.round(Math.random() * 35)]}${chars[Math.round(Math.random() * 35)]}${chars[Math.round(Math.random() * 35)]}`;
+            
+            // gamesArr.push(gameKey);
+            // console.log(gamesArr);
+
             const oldContent = buffer.toString();
             return fsPromises.appendFile(`./views/gameFiles/game_${gameKey}.ejs`, oldContent);
         })
         .then(() => {
             res.redirect('/game/' + gameKey);
-            next();
         })
+})
 
-      // let indexContent = fs.readFile('./views/index.ejs', (err, data) => {
-    //     if(err) throw err; 
-    //     console.log(data);
-    //     return data.toString(); 
-    // })
-
-    // fs.writeFileSync(`./views/gameFiles/game_${gameKey}.html`, indexContents);
-
-    // create HTML file with gameKey in filename
-    // var newHTML = fs.createWriteStream(`./views/gameFiles/game_${gameKey}.ejs`);
-    // newHTML.write(indexContents);
-    // newHTML.end();
-
-    // add the gameKey to the response (maybe unnecessary)
-    // res.locals.gameKey = gameKey;
-    // console.log('gameKey: ', res.locals.gameKey);
+app.get('/game', (req, res, next) => {
+    res.redirect('/');
 })
 
 // listen for get at the url generated in the previous middleware
-
 app.post('/find-game', (req, res, next) => {
     res.redirect(`/game/${req.body.gameKey}`);
 })
 
 app.get('/game/:url', (req, res, next) => {
-
+    
+    // get the gamekey from the request
     let url = req.url.substr(6);
-    console.log('url = ' + url);
-    // change this to andle any get to /game and then read the req url to dtermine what HTML file to serve
 
-    // console.log(res.locals.gameKey);
-    res.render(`./gameFiles/game_${url}`, {
-        gameNum: url 
-    });
+    fs.readdir(gameFilesPath, (err, files) => {
+        if (err) {
+            console.log(err);
+        } 
+        if (files.toString().includes(url)) {
+            res.render(`./gameFiles/game_${url}`, {
+                gameNum: url 
+            });
+        } else {
+            res.redirect('/game-not-found');
+        }
+    })
+
+    
 })
 
 
-/*
-app.get('/', function(req, res){
-//render homepage here
-});
-app.post('/', function(req,res){
-// handle creating temp pages here and
-// redirect client to that page
-// save ID of the page to db
-});
-app.get('/:pageId', function(req,res){
-// handle rendering the temp page by ID
-});
-app.post('/destroy', function(req,res){
-// remove page from db
-});
-*/
+app.use((req, res, next) => {
+    res.render('game-not-found.ejs', {
+        gameNum: req.url.substr(6)
+    });
+})
 
 app.listen(3000)

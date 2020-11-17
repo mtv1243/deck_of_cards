@@ -15,8 +15,9 @@
   integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
   crossorigin="anonymous"></script>
 
-  
-
+  <!-- THIS SPAN HOLDS DATA FROM EJS -->
+  <!-- IN JS ACCESS IT WITH document.querySeletor('#data').dataset -->
+<span id="data" data-gameKey="<%= gameNum %>"></span>
 
 
   <main>
@@ -24,39 +25,11 @@
   <section id="controls-wrapper">
     <button id="dealEl">Deal</button>
 
-    <form action="" id="dest">
-      <div class="radio-wrapper">
-        <input type="radio" name="master-controls" value="deal" id="deal-radio" class="radio" checked>
-      <label for="deal">Deal</label>
-      </div>
-      
-      <div class="radio-wrapper">
-        <input type="radio" name="master-controls" value="starter" id="starter-radio" class="radio">
-        <label for="cut">Starter</label>
-      </div>
-      
-    </form>
-
-    <!-- CRIB POT FORM -->
-    <form action="" id="cribPotForm">
-      
-      <div class="radio-wrapper">
-        <input type="radio" name="cribPotRadio" value="crib" id="crib-radio" class="radio" checked>
-      <label for="crib">Crib</label>
-      </div>
-      
-      <div class="radio-wraper">
-        <input type="radio" name="cribPotRadio" value="pot" id="pot-radio" class="radio">
-      <label for="pot">Pot</label>
-      </div>
-      
-    </form>
-
     <button id="resetEl">Reset</button>
 
       <!-- SCOREBOARD -->
     <div id="scoreboard">
-      <div class="gameKey">Game Key: <span><%= gameNum %></span></div>
+      <div class="gameKey">Private Game Key: <span><%= gameNum %></span></div>
       <section class="score1">
         <label for="score1-counter">Player 1:</label>
         <input type="number" id="score1-counter" value="0">
@@ -72,7 +45,7 @@
       
       <!-- PLAYER 1 HAND -->
       <div class="player-controls">
-        <button class="show-hand-1">Show/Hide Hand</button>
+        <button class="show-hand-1 hide">Show/Hide Hand</button>
       <h3>Player 1 hand</h3>
         <button class="show-crib-1">Show/Hide Crib</button>
       </div>
@@ -133,7 +106,7 @@
       <div class="player-controls">
 
         <!-- buttons -->
-        <button class="show-hand-2">Show/Hide Hand</button>
+        <button class="show-hand-2 hide">Show/Hide Hand</button>
       <h3>Player 2 hand</h3>
         <button class="show-crib-2">Show/Hide Crib</button>        
         </div>
@@ -158,10 +131,7 @@
     src="https://code.jquery.com/jquery-3.4.1.js"
     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script>
-  <!-- EJS VARIABLES -->
-    <script>
-      let gameKey = <%= gameNum %>;
-    </script>
+  
 
   <!-- APP JAVASCRIPT -->
   <script src='../public/cardDeck.js'></script>

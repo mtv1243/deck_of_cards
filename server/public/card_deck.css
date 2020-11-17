@@ -305,6 +305,63 @@ button {
   visibility: hidden;
 }
 
+.noClick {
+  pointer-events: none;
+}
+
+/* 
+========================
+         MODAL STYLES
+======================= */
+
+.modal {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.6);
+  z-index: 20;
+}
+
+.modal-content {
+  width: 40%;
+  position: relative;
+  margin: 10% auto;
+  background-color: #2A395E;
+  box-sizing: border-box;
+  padding: 2em;
+  border-radius: 1em;
+  border: 1px solid #000;
+}
+
+.modal-content a {
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid;
+}
+
+.modal-close {
+  position: absolute;
+  right: 2em;
+  top: 1em;
+  cursor: pointer;
+  background-color: #fff;
+  color: #000;
+  font-weight: 400;
+  border: 1px solid #000;
+  border-radius: 60%;
+  height: 1px;
+  padding: 12px;
+  width: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hide-modal {
+  display: none;
+}
+
 /* MOBILE  STYLES */
 
 /* tablet styles */

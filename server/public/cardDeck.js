@@ -13,8 +13,14 @@ firebase.initializeApp(firebaseConfig);
 //=======================================
 //Firebase setup
 //=======================================
+
+// get the game's unique key from the EJS variable
+let gameKey = document.querySelector('#data').dataset.gamekey;
+// console.log(gameKey);
+
+// create a firebase node with the game's unique key
 let gameListRef = firebase.database().ref(`gameList_${gameKey}`);
-gameListRef.push()
+gameListRef.push();
 
 let DeckReference = firebase.database().ref(`gameKey_${gameKey}`);
 let deckRef = DeckReference.child('deckoCards');
@@ -26,8 +32,9 @@ let crib1Ref = DeckReference.child('crib1');
 let crib2Ref = DeckReference.child('crib2');
 let starterRef = DeckReference.child('starter');
 let scoreboardRef = DeckReference.child('scoreboard');
-let cribPotRadioRef = DeckReference.child('cribPot'); 
+let autoCribRef = DeckReference.child('autoCrib'); 
 let counterRef = DeckReference.child('counter');
+let coinFlipRef = DeckReference.child('coinFlip');
 
 //set the player hands to empty on page load
 player1Ref.set({player1Cards:[]});
@@ -38,8 +45,13 @@ crib1Ref.set({crib:[]});
 crib2Ref.set({crib:[]});
 starterRef.set({starter:[]})
 scoreboardRef.set({score1: 0, score2: 0});
-cribPotRadioRef.set({value: 'crib'});
+autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0});
 counterRef.set(0);
+
+// remove the game's firebase node when the players leave the page
+window.addEventListener('beforeunload', (event) => {
+  DeckReference.set({});
+})
 
 //========================================
 //create card class and deck
@@ -104,6 +116,8 @@ cardDeck.shuffle();
 let player1Hand = [];
 let player2Hand = [];
 let turn = true;
+let autoCrib1 = 0;
+let autoCrib2 = 0;
 
 //get player hands html elements
 let player1El = document.querySelector('.player1');
@@ -111,6 +125,10 @@ let player2El = document.querySelector('.player2');
 
 let $player1El = $('.player1');
 let $player2El = $('.player2');
+
+// Curtain elements
+let $hand1Curtain = $('.hand1-curtain');
+let $hand2Curtain = $('.hand2-curtain');
 
 //get player crib elements
 let player1CribEl = document.querySelector('.crib1');
@@ -141,12 +159,12 @@ let $cribButton2 = $('.show-crib-2');
 
 $showButton1.click(()=>{
   // $player1El.toggleClass('hide');
-  $('.hand1-curtain').slideToggle();
+  $hand1Curtain.slideToggle();
 });
 
 $showButton2.click(()=>{
   // $player2El.toggleClass('hide');
-  $('.hand2-curtain').slideToggle();
+  $hand2Curtain.slideToggle();
 });
 
 $cribButton1.click(()=>{
@@ -158,6 +176,63 @@ $cribButton2.click(()=>{
   // $player2Crib.toggleClass('hide')
   $('.crib2-curtain').slideToggle();
 });
+
+// determine if player 1 or 2
+coinFlipRef.once('value', (snap) => {
+  let val = snap.val();
+  console.log(val);
+  if(!val) {
+    val = { player1: '', player2: '' };
+    val.player1 = 'Player 1';
+    $hand1Curtain.hide();
+    player2El.classList.add('hide', 'noClick');
+    coinFlipRef.set(val);
+    $showButton2.addClass('hide noClick');
+    showModal(val.player1);
+  } else if(val.player2 === '') {
+    val.player2 === 'Player 2';
+    $hand2Curtain.hide();
+    player1El.classList.add('hide', 'noClick');
+    coinFlipRef.set(val);
+    $showButton1.addClass('hide noClick');
+    showModal(val.player2);
+  }
+})
+
+function showModal(playerNum) {
+  let modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.innerHTML = `
+  <div class="modal-content">
+    <h3>You are ${playerNum}!</h3>
+    <p class="modal-description">Welcome to online cribbage! Here's some important info before you get started.</p>
+    <ul>
+    <li>The game will reset if you or the other player reloads or refreshes the page.</li>
+    <li>As ${playerNum}, you will not see the other player's cards until they are played.</li>
+    <li>The link to this game will be valid for 24 hours after it was created.</li>
+    <li>The first two cards you click in your hand will go to the crib, the rest will go to the play.</li>
+    <li>If you need to look up the rules, <a href="https://bicyclecards.com/how-to-play/cribbage/" target="_blank" rel="noopener">click here</a>.</li>
+    <p>That's it, have fun!</p>
+    <span class="modal-close" onclick="closeModal()">x</span>
+  </div>
+  `;
+  document.querySelector('#controls-wrapper').appendChild(modal);
+}
+
+function closeModal() {
+  document.querySelector('.modal').classList.add('hide-modal');
+}
+/*
+ // function for telling user if they're player 1 or two
+  const assignPlayer = (playerNum, elementToHide) => {
+    create modal
+      "You are player X", you won't see other player's cards
+      tell them game will reset on page refresh
+      unique URL will be valid for 24 hours
+      explain basic rules
+      Have fun!
+  }
+*/
 
 // update firebase score reference when click scorboard element
 player1ScoreEl.addEventListener('input', (e) => {
@@ -189,28 +264,6 @@ scoreboardRef.on('value', (snap) => {
   player2ScoreEl.value = snap.val().score2;
 })
 
-// ========================
-// Crib pot radio reference updater
-// ========================
-document.querySelector('#cribPotForm').addEventListener('click', (e) => {
-  // e.preventDefault();
-  let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
-  cribPotRadioRef.set({value: val});
-});
-
-cribPotRadioRef.on('value', (snap) => {
-  let val = snap.val();
-
-  // change the corresponding radio when one  is clicked
-  if(val.value === 'crib') {
-    document.querySelector('#crib-radio').checked = true;
-  } else if(val.value === 'pot') {
-    document.querySelector('#pot-radio').checked = true;
-  }
-})
-
-// #crib-radio
-
 //===================================
 // Reset all values except scoreboard
 // on reset button click
@@ -227,6 +280,7 @@ resetButton.addEventListener('click', (e) => {
   crib2Ref.set({crib:[]});
   starterRef.set({starter:[]});
   counterRef.set(0);
+  autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0})
 
   // create a new deck and shuffle it
   cardDeck = new Deck();
@@ -237,6 +291,8 @@ resetButton.addEventListener('click', (e) => {
   player1Hand = [];
   player2Hand = [];
   turn = true;
+  autoCrib1 = 0;
+  autoCrib2 = 0;
 
   //reset the pot elements on click (in case there's a glitch)
   player1PotEl.innerHTML = '';
@@ -250,24 +306,24 @@ dealButton.addEventListener('click', deal);
 function deal(){
   deckRef.once('value', (snap)=>{
     let fbDeck = snap.val();
-    let fbCard = fbDeck.shift();
-    deckRef.set(fbDeck);
-    // console.log(fbCard.suit);
-    let val = document.querySelector('input[name=master-controls]:checked').value
-    
-    if(val === 'deal'){
-      if(turn){
-        player1Ref.push().set(fbCard);
-        turn = false;
-      } else {
-        player2Ref.push().set(fbCard);
-        turn = true;
-      }
-    } else if(val === 'starter') {
+    // let val = document.querySelector('input[name=master-controls]:checked').value;
+    // if(val === 'deal'){
+      for(let i=0; i<12; i++){
+        let fbCard = fbDeck.shift();
+        if(turn){
+          player1Ref.push().set(fbCard);
+          turn = false;
+        } else {
+          player2Ref.push().set(fbCard);
+          turn = true;
+        }
+      // }
+    } 
+    // if(val === 'starter') {
       console.log('starter');
-      starterRef.push().set(fbCard);
-    }
-    
+      starterRef.push().set(fbDeck.shift());
+    // }
+    deckRef.set(fbDeck);
   });
 };
 
@@ -277,6 +333,7 @@ player1Ref.on('value', (snap)=>{
   let hand = snap.val();
   //reset the players hand element
   player1El.innerHTML='';
+  console.log('render Player 1 hand');
   getFBHand(player1El, hand);
 });
 
@@ -286,6 +343,7 @@ player2Ref.on('value', (snap)=>{
   let hand = snap.val();
   //reset player hand element
   player2El.innerHTML='';
+  console.log('render Player 2 hand');
   getFBHand(player2El, hand);
 })
 
@@ -309,28 +367,37 @@ crib2Ref.on('value', (snap)=>{
 
 count1Ref.on('value', (snap)=>{
   let hand = snap.val();
-  let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
-
-  if(val === 'pot') {
-    player1PotEl.innerHTML = '';
-    getFBHand(player1PotEl, hand);
-  } else if(val === 'crib') {
-    player1CribEl.innerHTML = '';
-    getFBHand(player1CribEl, hand)
-  }
+  // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
+  autoCribRef.once('value', (snap) => {
+    let val = snap.val();
+    if(val.fbAutoCrib1 === 2) {
+      console.log('render POT1');
+      player1PotEl.innerHTML = '';
+      getFBHand(player1PotEl, hand);
+    } else if(val.fbAutoCrib1 < 2) {
+      console.log('render CRIB1');
+      player1CribEl.innerHTML = '';
+      getFBHand(player1CribEl, hand)
+    }
+  })
 })
 
 count2Ref.on('value', (snap)=>{
   let hand = snap.val();
-  let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
+  // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
+  autoCribRef.once('value', (snap) => {
+    let val = snap.val();
 
-  if(val === 'pot') {
-    player2PotEl.innerHTML = '';
-    getFBHand(player2PotEl, hand);
-  } else if(val === 'crib') {
-    player2CribEl.innerHTML = '';
-    getFBHand(player2CribEl, hand)
-  }
+    if(val.fbAutoCrib2 === 2) {
+      console.log('render POT2')
+      player2PotEl.innerHTML = '';
+      getFBHand(player2PotEl, hand);
+    } else if(val.fbAutoCrib2 < 2) {
+      console.log('render CRIB2')
+      player2CribEl.innerHTML = '';
+      getFBHand(player2CribEl, hand)
+    }
+  })
 })
 
 counterRef.on('value', (snap) => {
@@ -365,49 +432,55 @@ player1El.addEventListener('click', (e)=>{
   let value = card.querySelector('span').innerHTML;
   // console.log(suit, value);
 
-  // update the count on both screens
-  updateCount(value);
-
   card.remove()
   //get a snapshot of the player's hand search it for the
   //corresponding card that was clicked
   player1Ref.once('value', (snap)=>{
     let hand = snap.val();
+    console.log('player 1 hand: ', hand);
     // console.log(hand);
     //iterate through the cards in the hand and find the one that was clicked
-    for (key in hand) {
-      // grab the suit and value of the key being checked
-      let fbSuit = hand[key]['suit'];
-      let fbValue = hand[key]['value'];
-
-      // see if card should go to crib or pot
-      let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
-
-      //check if the fb card matches the card clicked
-      if (fbSuit === suit && fbValue.toString() === value) {
-        // executes if the crib radio is selected
-        if(val === 'crib') {
-          crib1Ref.push().set(hand[key]);
-
-        // executes if the pot radio is selected
-        } else if(val === 'pot') {
-          count1Ref.push().set(hand[key]);
+    autoCribRef.once('value', (snap) => {
+      let val = snap.val();
+      
+      for (key in hand) {
+        // grab the suit and value of the key being checked
+        let fbSuit = hand[key]['suit'];
+        let fbValue = hand[key]['value'];
+  
+        //check if the fb card matches the card clicked
+        if (fbSuit === suit && fbValue.toString() === value) {
+          console.log('correct card');
+          // if there are less than 2 cards in player's crib already
+          if (val.fbAutoCrib1 < 2) {
+            // send card to crib
+            crib1Ref.push().set(hand[key]);
+            val.fbAutoCrib1++;
+            autoCribRef.child('fbAutoCrib1').set(val.fbAutoCrib1)
+            console.log('fbAutoCrib1: ' + val.fbAutoCrib1);
+          } else {
+            // send card to player's pot
+            count1Ref.push().set(hand[key]);
+            console.log('wrong card');
+            // update the count on both screens
+            updateCount(value);
+          }
+        } else {
+          // if card does not match clicked card, add it to new hand
+          newHand[key] = hand[key];
+          console.log('wrong card added to new hand');
         }
-
-      } else {
-        // console.log('wrong card');
-        newHand[key] = hand[key];
       }
-    }
-    
+      player1Ref.set(newHand);
+      console.log('player 1 set new FB hand');
+    })
   })
-  // set the new firebase hand
-  player1Ref.set(newHand);
-  // console.log(newHand);
+  // set the new firebase hand, sans card that was clicked
 })
 
 // Same for player 2 element
 player2El.addEventListener('click', (e)=>{
+
   //get nearest card element to the target
   let card = e.target.closest('div.card');
   let newHand = {};
@@ -417,41 +490,47 @@ player2El.addEventListener('click', (e)=>{
   let value = card.querySelector('span').innerHTML;
   // console.log(typeof value);
 
-  updateCount(value);
-
   card.remove()
   //get a snapshot of the player's hand search it for the
   //corresponding card that was clicked
   player2Ref.once('value', (snap)=>{
     let hand = snap.val();
     
+    autoCribRef.once('value', (snap) => {
+      let val = snap.val();
+      
+      for (key in hand) {
+        // grab the suit and value of the key being checked
+        let fbSuit = hand[key]['suit'];
+        let fbValue = hand[key]['value'];
+        // see if card should go to crib or pot
+        // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
+  
+        //check if the fb card matches the card clicked
+        if (fbSuit === suit && fbValue.toString() === value) {
+          // executes if the crib radio is selected
+          if(val.fbAutoCrib2 < 2) {
+            crib2Ref.push().set(hand[key]);
+            val.fbAutoCrib2++;
+            autoCribRef.child('fbAutoCrib2').set(val.fbAutoCrib2);
+            console.log('fbAutoCrib2: ' + val.fbAutoCrib2);
+          } else {
+            count2Ref.push().set(hand[key]);
+            updateCount(value);
+          }
+        } else {
+          // console.log('wrong card');
+          newHand[key] = hand[key];
+        } 
+      }
+      player2Ref.set(newHand);
+    })
     // console.log(hand);
     //iterate through the cards in the hand and find the one that was clicked
-    for (key in hand) {
-      // grab the suit and value of the key being checked
-      let fbSuit = hand[key]['suit'];
-      let fbValue = hand[key]['value'];
-      // see if card should go to crib or pot
-      let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
-
-      //check if the fb card matches the card clicked
-      if (fbSuit === suit && fbValue.toString() === value) {
-        // executes if the crib radio is selected
-        if(val === 'crib') {
-          crib2Ref.push().set(hand[key]);
-
-        // executes if the pot radio is selected
-        } else if(val === 'pot') {
-          count2Ref.push().set(hand[key]);
-        }
-      } else {
-        // console.log('wrong card');
-        newHand[key] = hand[key];
-      } 
-    }
+    
   })
   // set the new firebase hand
-  player2Ref.set(newHand);
+
 })
 
 
@@ -459,7 +538,7 @@ function updateCount(cardVal) {
   let currentCount = parseInt(countEl.innerHTML);
   let parsedVal = 0;
   console.log('current count: ' + currentCount);
-  if (document.querySelector('input[name="cribPotRadio"]:checked').value === 'pot') {
+  // if (document.querySelector('input[name="cribPotRadio"]:checked').value === 'pot') {
     if(cardVal == 'J' || cardVal == 'Q' || cardVal == 'K') {
       parsedVal += 10;
       currentCount += 10;
@@ -470,7 +549,7 @@ function updateCount(cardVal) {
       parsedVal += parseInt(cardVal);
       currentCount += parseInt(cardVal);
     }
-  }
+  // }
 
   (currentCount > 31) ? counterRef.set(parsedVal) : counterRef.set(currentCount);
 }
@@ -485,14 +564,6 @@ function detectLandscape() {
 detectLandscape();
 
 /*
-player 2 playing into their crib does not show up for player 1 in DOM
-they leave the hand but do not show up in DOM
-
-when opponent plays card into either crib or pot, whatever radio button is checked locally determines where it goes, not what radio button opponent has checked
-
-FIX = 
-remove players individual radio buttons and replace with one set connected to firebase that will control where cards go globally
-
-tumbleweed
-
+lucky semicolon, don't touch
+;
 */
