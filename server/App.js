@@ -1,3 +1,5 @@
+// PUSH TO HEROKU WITH THIS COMMAND: git subtree push --prefix /server heroku master
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -9,9 +11,9 @@ let gameKey;
 // used to create unique game keys
 const chars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-// holds the unique game keys, in order of creation
-// let gamesArr = [];
-
+// =================================
+// CHECK FOR OLD GAMES EVERY 24 HOURS
+// =================================
 // get path of directory holding game files
 const gameFilesPath = path.join(__dirname, '/views/gameFiles');
 setInterval(()=> {

@@ -366,6 +366,12 @@ button {
 
 /* tablet styles */
 @media only screen and (max-width: 769px) {
+
+  /* Modal mobile styles */
+  .modal-content {
+    width: 80%;
+  }
+
   main {
     width: 100%;
     padding: 0;

@@ -35,6 +35,7 @@ let scoreboardRef = DeckReference.child('scoreboard');
 let autoCribRef = DeckReference.child('autoCrib'); 
 let counterRef = DeckReference.child('counter');
 let coinFlipRef = DeckReference.child('coinFlip');
+let resetRef = DeckReference.child('reset');
 
 //set the player hands to empty on page load
 player1Ref.set({player1Cards:[]});
@@ -47,6 +48,8 @@ starterRef.set({starter:[]})
 scoreboardRef.set({score1: 0, score2: 0});
 autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0});
 counterRef.set(0);
+resetRef.set(false);
+// coinFlipRef.set({ player1: '', player2: '' });
 
 // remove the game's firebase node when the players leave the page
 window.addEventListener('beforeunload', (event) => {
@@ -113,7 +116,7 @@ cardDeck.createDeck(suits, values);
 cardDeck.shuffle();
 
 //make player hands
-let player1Hand = [];
+// let player1Hand = [];
 let player2Hand = [];
 let turn = true;
 let autoCrib1 = 0;
@@ -182,15 +185,16 @@ coinFlipRef.once('value', (snap) => {
   let val = snap.val();
   console.log(val);
   if(!val) {
-    val = { player1: '', player2: '' };
-    val.player1 = 'Player 1';
+    val = {player1: "Player 1", player2: ""};
+    console.log(val);
     $hand1Curtain.hide();
     player2El.classList.add('hide', 'noClick');
     coinFlipRef.set(val);
     $showButton2.addClass('hide noClick');
     showModal(val.player1);
-  } else if(val.player2 === '') {
-    val.player2 === 'Player 2';
+  } else if(val.player1 === "Player 1") {
+    val.player2 = 'Player 2';
+    console.log(val);
     $hand2Curtain.hide();
     player1El.classList.add('hide', 'noClick');
     coinFlipRef.set(val);
@@ -222,17 +226,6 @@ function showModal(playerNum) {
 function closeModal() {
   document.querySelector('.modal').classList.add('hide-modal');
 }
-/*
- // function for telling user if they're player 1 or two
-  const assignPlayer = (playerNum, elementToHide) => {
-    create modal
-      "You are player X", you won't see other player's cards
-      tell them game will reset on page refresh
-      unique URL will be valid for 24 hours
-      explain basic rules
-      Have fun!
-  }
-*/
 
 // update firebase score reference when click scorboard element
 player1ScoreEl.addEventListener('input', (e) => {
@@ -271,6 +264,14 @@ scoreboardRef.on('value', (snap) => {
 resetButton.addEventListener('click', (e) => {
   e.preventDefault();
 
+  resetRef.once('value', (snap)=>{
+    let val = snap.val();
+    val = !val;
+    resetRef.set(val);
+  })
+})
+
+resetRef.on('value', (snap)=> {
   //set the player hands to empty on page load
   player1Ref.set({player1Cards:[]});
   player2Ref.set({player2Cards:[]});
@@ -280,7 +281,7 @@ resetButton.addEventListener('click', (e) => {
   crib2Ref.set({crib:[]});
   starterRef.set({starter:[]});
   counterRef.set(0);
-  autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0})
+  autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0});
 
   // create a new deck and shuffle it
   cardDeck = new Deck();
@@ -288,7 +289,7 @@ resetButton.addEventListener('click', (e) => {
   cardDeck.shuffle();
 
   // reset the player hand arrays and the turn boolean
-  player1Hand = [];
+  // player1Hand = [];
   player2Hand = [];
   turn = true;
   autoCrib1 = 0;
@@ -297,10 +298,12 @@ resetButton.addEventListener('click', (e) => {
   //reset the pot elements on click (in case there's a glitch)
   player1PotEl.innerHTML = '';
   player2PotEl.innerHTML = '';
+  console.log('reset');
+});
 
-})
-
+//============================================
 //call deal function when click on deal button
+//============================================
 dealButton.addEventListener('click', deal);
 
 function deal(){
@@ -333,7 +336,7 @@ player1Ref.on('value', (snap)=>{
   let hand = snap.val();
   //reset the players hand element
   player1El.innerHTML='';
-  console.log('render Player 1 hand');
+  // console.log('render Player 1 hand');
   getFBHand(player1El, hand);
 });
 
@@ -343,7 +346,7 @@ player2Ref.on('value', (snap)=>{
   let hand = snap.val();
   //reset player hand element
   player2El.innerHTML='';
-  console.log('render Player 2 hand');
+  // console.log('render Player 2 hand');
   getFBHand(player2El, hand);
 })
 
@@ -375,7 +378,7 @@ count1Ref.on('value', (snap)=>{
       player1PotEl.innerHTML = '';
       getFBHand(player1PotEl, hand);
     } else if(val.fbAutoCrib1 < 2) {
-      console.log('render CRIB1');
+      // console.log('render CRIB1');
       player1CribEl.innerHTML = '';
       getFBHand(player1CribEl, hand)
     }
@@ -393,7 +396,7 @@ count2Ref.on('value', (snap)=>{
       player2PotEl.innerHTML = '';
       getFBHand(player2PotEl, hand);
     } else if(val.fbAutoCrib2 < 2) {
-      console.log('render CRIB2')
+      // console.log('render CRIB2')
       player2CribEl.innerHTML = '';
       getFBHand(player2CribEl, hand)
     }
@@ -437,7 +440,7 @@ player1El.addEventListener('click', (e)=>{
   //corresponding card that was clicked
   player1Ref.once('value', (snap)=>{
     let hand = snap.val();
-    console.log('player 1 hand: ', hand);
+    // console.log('player 1 hand: ', hand);
     // console.log(hand);
     //iterate through the cards in the hand and find the one that was clicked
     autoCribRef.once('value', (snap) => {
@@ -450,29 +453,29 @@ player1El.addEventListener('click', (e)=>{
   
         //check if the fb card matches the card clicked
         if (fbSuit === suit && fbValue.toString() === value) {
-          console.log('correct card');
+          // console.log('correct card');
           // if there are less than 2 cards in player's crib already
           if (val.fbAutoCrib1 < 2) {
             // send card to crib
             crib1Ref.push().set(hand[key]);
             val.fbAutoCrib1++;
             autoCribRef.child('fbAutoCrib1').set(val.fbAutoCrib1)
-            console.log('fbAutoCrib1: ' + val.fbAutoCrib1);
+            // console.log('fbAutoCrib1: ' + val.fbAutoCrib1);
           } else {
             // send card to player's pot
             count1Ref.push().set(hand[key]);
-            console.log('wrong card');
+            // console.log('wrong card');
             // update the count on both screens
             updateCount(value);
           }
         } else {
           // if card does not match clicked card, add it to new hand
           newHand[key] = hand[key];
-          console.log('wrong card added to new hand');
+          // console.log('wrong card added to new hand');
         }
       }
       player1Ref.set(newHand);
-      console.log('player 1 set new FB hand');
+      // console.log('player 1 set new FB hand');
     })
   })
   // set the new firebase hand, sans card that was clicked
@@ -503,8 +506,6 @@ player2El.addEventListener('click', (e)=>{
         // grab the suit and value of the key being checked
         let fbSuit = hand[key]['suit'];
         let fbValue = hand[key]['value'];
-        // see if card should go to crib or pot
-        // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
   
         //check if the fb card matches the card clicked
         if (fbSuit === suit && fbValue.toString() === value) {
@@ -513,7 +514,7 @@ player2El.addEventListener('click', (e)=>{
             crib2Ref.push().set(hand[key]);
             val.fbAutoCrib2++;
             autoCribRef.child('fbAutoCrib2').set(val.fbAutoCrib2);
-            console.log('fbAutoCrib2: ' + val.fbAutoCrib2);
+            // console.log('fbAutoCrib2: ' + val.fbAutoCrib2);
           } else {
             count2Ref.push().set(hand[key]);
             updateCount(value);
@@ -537,7 +538,7 @@ player2El.addEventListener('click', (e)=>{
 function updateCount(cardVal) {
   let currentCount = parseInt(countEl.innerHTML);
   let parsedVal = 0;
-  console.log('current count: ' + currentCount);
+  // console.log('current count: ' + currentCount);
   // if (document.querySelector('input[name="cribPotRadio"]:checked').value === 'pot') {
     if(cardVal == 'J' || cardVal == 'Q' || cardVal == 'K') {
       parsedVal += 10;
